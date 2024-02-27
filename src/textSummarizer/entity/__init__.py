@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import List
+from pydantic import BaseModel
 
 @dataclass(frozen=True)
 class DataIngestionConfig:
@@ -45,3 +47,15 @@ class ModelEvaluationConfig:
     model_path: Path
     tokenizer_path: Path
     metric_file_name: Path
+
+class SummarizerSingleRequest(BaseModel):
+    transcript: str
+
+class SummarizerBatchRequest(BaseModel):
+    features: List[SummarizerSingleRequest]
+
+class SummarizerSingleResponse(BaseModel):
+    result: str
+
+class SummarizerBatchResponse(BaseModel):
+    result: List[str]
