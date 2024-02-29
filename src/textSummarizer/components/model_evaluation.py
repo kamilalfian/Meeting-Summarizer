@@ -7,12 +7,15 @@ from textSummarizer.entity import ModelEvaluationConfig
 import torch
 import pandas as pd
 import psycopg2
+import os
+from dotenv import load_dotenv
 
-hostname = 'localhost'
-database = 'postgres'
-username = 'postgres'
-pwd = 'admin'
-port_id = 5432
+load_dotenv()
+hostname = os.getenv("DB_HOSTNAME")
+database = os.getenv("DB_DATABASE")
+username = os.getenv("DB_USERNAME")
+pwd = os.getenv("DB_PWD")
+port_id = os.getenv("DB_PORT")
 conn= None
 
 class ModelEvaluation:
