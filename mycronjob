@@ -1,2 +1,0 @@
-# Run main.py every day at 9 AM
-30 9 * * * /usr/bin/python3 /app/main.py
