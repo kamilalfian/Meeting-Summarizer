@@ -5,7 +5,7 @@ WORKDIR /app
 COPY . /app
 
 RUN pip install -r requirements.txt
-RUN pip install --upgrade accelerateg
+RUN pip install --upgrade accelerate
 RUN apt-get update && apt-get install -y cron
 
 CMD ["python", "app.py"]
