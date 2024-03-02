@@ -13,8 +13,18 @@ class ModelTrainer:
 
     def train(self):
         device = "cuda" if torch.cuda.is_available() else "cpu"
-        tokenizer = AutoTokenizer.from_pretrained(self.config.model_ckpt)
-        model_pegasus = AutoModelForSeq2SeqLM.from_pretrained(self.config.model_ckpt).to(device)
+        if not os.path.exists(os.path.join(self.config.root_dir, "tokenizer")) or not os.listdir(os.path.join(self.config.root_dir, "tokenizer")):
+            tokenizer = AutoTokenizer.from_pretrained(self.config.model_ckpt)
+            print('loading tokenizer from huggingface hub')
+        else:
+            tokenizer = AutoTokenizer.from_pretrained(os.path.join(self.config.root_dir, "tokenizer"))
+            print('loading tokenizer from artifacts')
+        if not os.path.exists(os.path.join(self.config.root_dir, "pegasus_x-model")) or not os.listdir(os.path.join(self.config.root_dir, "pegasus_x-model")):
+            model_pegasus = AutoModelForSeq2SeqLM.from_pretrained(self.config.model_ckpt).to(device)
+            print('loading model from huggingface hub')
+        else:
+            model_pegasus = AutoModelForSeq2SeqLM.from_pretrained(os.path.join(self.config.root_dir, "pegasus_x-model")).to(device)
+            print('loading model from artifacts')
         seq2seq_data_collator = DataCollatorForSeq2Seq(tokenizer, model=model_pegasus)
 
         # loading data
