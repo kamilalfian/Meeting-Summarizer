@@ -10,7 +10,6 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-#test
 load_dotenv()
 hostname = os.getenv("DB_HOSTNAME")
 database = os.getenv("DB_DATABASE")
