@@ -22,7 +22,19 @@ try:
     with psycopg2.connect(host = hostname, dbname = database, user = username,
                            password = pwd, port = port_id) as conn:
         with conn.cursor() as cur:
-            print('okay')
+            cur.execute('DROP TABLE IF EXISTS rouge')
+            cur.execute('DROP TABLE IF EXISTS summary')
+            create_rouge = '''CREATE TABLE IF NOT EXISTS rouge (
+                                                        rouge1      float,
+                                                        rouge2      float,
+                                                        rougeL      float,
+                                                        rougeLSUM      float)'''
+            create_summary = '''CREATE TABLE IF NOT EXISTS summary (
+                                                                transcript      varchar,
+                                                                summary    varchar,
+                                                                prediction  varchar)'''
+            cur.execute(create_rouge)
+            cur.execute(create_summary)
 except Exception as error:
     print(error)
 finally:
