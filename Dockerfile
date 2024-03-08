@@ -1,7 +1,7 @@
 FROM python:3.10-slim-buster
 
 # Install PostgreSQL and Nano
-RUN apt update && apt upgrade -y && apt install -y postgresql postgresql-contrib nano
+RUN apt-get update && apt-get upgrade -y && apt-get install -y postgresql postgresql-contrib nano
 
 WORKDIR /app
 
