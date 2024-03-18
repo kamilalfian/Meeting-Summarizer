@@ -4,11 +4,16 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install -r requirements.txt
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    postgresql postgresql-contrib nano && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-# Install PostgreSQL and Nano
-RUN apt-get update && apt-get upgrade -y && apt-get install -y postgresql postgresql-contrib nano
-
-RUN pip install --upgrade accelerate
+# Install Python dependencies
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install --upgrade accelerate
 
 CMD ["python", "app.py"]
