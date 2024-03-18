@@ -16,4 +16,5 @@ RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
     pip install --upgrade accelerate
 
+# Enable app.py
 CMD ["python", "app.py"]
