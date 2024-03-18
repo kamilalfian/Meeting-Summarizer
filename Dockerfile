@@ -1,7 +1,7 @@
 FROM python:3.10-slim-buster
 
+# MOve workdir to /app
 WORKDIR /app
-
 COPY . /app
 
 # Install system dependencies
