@@ -28,7 +28,7 @@ try:
                                                         rouge1      float,
                                                         rouge2      float,
                                                         rougeL      float,
-                                                        rougeLSUM      float)'''
+                                                        sumlen      float)'''
             create_summary = '''CREATE TABLE IF NOT EXISTS summary (
                                                                 transcript      varchar,
                                                                 summary    varchar,

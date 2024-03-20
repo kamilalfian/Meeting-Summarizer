@@ -35,7 +35,7 @@ class ModelEvaluation:
         rouge1_scores = []
         rouge2_scores = []
         rougeL_scores = []
-        rougeLSUM_scores = []
+        sumlen_scores = []
 
         try:
             with psycopg2.connect(host = hostname, dbname = database, user = username,
@@ -47,7 +47,7 @@ class ModelEvaluation:
                                             rouge1      float,
                                             rouge2      float,
                                             rougeL      float,
-                                            rougeLSUM      float)'''
+                                            sumlen      float)'''
                     create_summary = '''CREATE TABLE IF NOT EXISTS summary (
                                                     transcript      varchar,
                                                     summary    varchar,
@@ -55,7 +55,7 @@ class ModelEvaluation:
                     cur.execute(create_rouge)
                     cur.execute(create_summary)
                     insert_script_summary = 'INSERT INTO summary (transcript, summary, prediction) VALUES (%s, %s, %s)'
-                    insert_script_rouge = 'INSERT INTO rouge (rouge1, rouge2, rougeL, rougeLSUM) VALUES (%s, %s, %s, %s)'
+                    insert_script_rouge = 'INSERT INTO rouge (rouge1, rouge2, rougeL, sumlen) VALUES (%s, %s, %s, %s)'
 
                     # Iterate over the first 60 examples in the test dataset
                     for idx, (summary, transcript) in tqdm(
@@ -70,26 +70,26 @@ class ModelEvaluation:
                         rouge1_scores.append(scores['rouge1'].fmeasure)
                         rouge2_scores.append(scores['rouge2'].fmeasure)
                         rougeL_scores.append(scores['rougeL'].fmeasure)
-                        # Calculate ROUGE-LSUM score
+                        # Calculate sumlen score
                         summary_length = len(summary.split())
                         prediction_length = len(prediction.split())
-                        rouge_lsum_score = min(1, prediction_length / summary_length)
-                        rougeLSUM_scores.append(rouge_lsum_score)
+                        sumlen_score = prediction_length / summary_length
+                        sumlen_scores.append(sumlen_score)
                     # Calculate average ROUGE scores
                     avg_rouge1 = sum(rouge1_scores) / len(rouge1_scores)
                     avg_rouge2 = sum(rouge2_scores) / len(rouge2_scores)
                     avg_rougeL = sum(rougeL_scores) / len(rougeL_scores)
-                    avg_rougeLSUM = sum(rougeLSUM_scores) / len(rougeLSUM_scores)
+                    avg_sumlen = sum(sumlen_scores) / len(sumlen_scores)
                     #Convert to csv file
                     df = pd.DataFrame({
                         'avg_rouge1': [avg_rouge1],
                         'avg_rouge2': [avg_rouge2],
                         'avg_rougeL': [avg_rougeL],
-                        'avg_rougeLSUM': [avg_rougeLSUM]
+                        'avg_sumlen': [avg_sumlen]
                     }, index=['pegasus'])
                     df.to_csv(self.config.metric_file_name, index=False)
                     #Postgres DB transaction for ROUGE scores
-                    insert_value_rouge = (avg_rouge1, avg_rouge2, avg_rougeL, avg_rougeLSUM)
+                    insert_value_rouge = (avg_rouge1, avg_rouge2, avg_rougeL, avg_sumlen)
                     cur.execute(insert_script_rouge, insert_value_rouge)
         except Exception as error:
             print(error)
