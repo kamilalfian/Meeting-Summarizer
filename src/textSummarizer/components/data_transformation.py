@@ -73,5 +73,5 @@ class DataTransformation:
             'train': train_dataset,
             'validation': validation_dataset,
             'test': test_dataset})
-        dataset_converted = dataset.map(self.convert_examples_to_features, batched=True, remove_columns=['id', 'uid','input_token_length', 'output_token_length','__index_level_0__'])
+        dataset_converted = dataset.map(self.convert_examples_to_features, batched=True, remove_columns=['id', 'uid','input_token_length', 'output_token_length'])
         dataset_converted.save_to_disk(os.path.join(self.config.root_dir, "dataset"))
